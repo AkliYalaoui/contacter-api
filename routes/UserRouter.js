@@ -3,7 +3,7 @@ import { AuthMiddleware } from "../utilities/AuthMiddleware.js";
 import UserController from "../controllers/UserController.js";
 const router = Router();
 
-router.get("/",AuthMiddleware,UserController.getLoggedUser)
-router.get("/image/:imageName", AuthMiddleware,UserController.getImage);
+router.get("/", AuthMiddleware, UserController.getLoggedUser);
+router.get("/image/:imageName", UserController.getImage);
 
 export default router;

@@ -6,6 +6,9 @@ import cors from "cors";
 import fileUploader from "express-fileupload";
 import AuthRoutes from "./routes/AuthRouter.js";
 import UserRoutes from "./routes/UserRouter.js";
+import FriendRoutes from "./routes/FriendRouter.js";
+import ConversationRoutes from "./routes/ConversationRouter.js";
+import socketIo from "./socket.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -25,11 +28,14 @@ mongoose
     app.use(cors());
     app.use(express.json());
     app.use(fileUploader());
-    
+
     app.use("/api/auth", AuthRoutes);
     app.use("/api/users", UserRoutes);
+    app.use("/api/friends", FriendRoutes);
+    app.use("/api/conversations", ConversationRoutes);
 
     const server = http.createServer(app);
+    socketIo(server);
     server.listen(PORT, HOST, (_) =>
       console.log(`Server up and running on ${HOST}:${PORT}`)
     );

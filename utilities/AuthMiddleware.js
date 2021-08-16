@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 const AuthMiddleware = async (req, res, next) => {
   const token = req.header("auth-token");
 
@@ -9,7 +11,7 @@ const AuthMiddleware = async (req, res, next) => {
   }
 
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    const verified = jwt.verify(token, process.env.TOKEN);
     if (!verified) {
       return res.status(401).json({
         success: false,

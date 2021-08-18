@@ -28,55 +28,57 @@ const createPost = async (req, res) => {
     //user Id
     const { userId } = req;
 
+    let fileName = "";
+    let hasImage = false;
+    let file = "";
     //validate Image;
-    const file = req.files.postPhoto;
-    if (!file) {
-      return res.status(500).json({
-        success: false,
-        error: "An image is required",
-      });
-    }
-    const fileUploadError = validatePostImage(file);
+    if (req.files && req.files.postPhoto) {
+      file = req.files.postPhoto;
 
-    if (fileUploadError) {
-      return res.status(500).json({
-        success: false,
-        error: fileUploadError,
-      });
-    }
-    //move the file to the uploads folder
-    const fileName = `${uuidv4()}${path.extname(file.name)}`;
-    file.mv(`./uploads/posts/${fileName}`, async (err) => {
-      if (err) {
-        console.log(err);
+      const fileUploadError = validatePostImage(file);
+
+      if (fileUploadError) {
         return res.status(500).json({
           success: false,
-          error: "Couldn't upload the image, please try again",
+          error: fileUploadError,
         });
       }
-      //create the post
-      const post = new Post({
-        userId,
-        content: value.content,
-        image: {
-          url: fileName,
-          type: getImageType(file),
-        },
+      //move the file to the uploads folder
+      fileName = `${uuidv4()}${path.extname(file.name)}`;
+      file.mv(`./uploads/posts/${fileName}`, async (err) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            error: "Couldn't upload the image, please try again",
+          });
+        }
       });
+      hasImage = true;
+    }
+    //create the post
+    const post = new Post({
+      userId,
+      content: value.content,
+      hasImage,
+      image: {
+        url: fileName,
+        type: file ? getImageType(file) : "",
+      },
+    });
 
-      const savedPost = await post.save();
+    const savedPost = await post.save();
 
-      if (!savedPost) {
-        return res.status(500).json({
-          success: false,
-          error: "Couldn't create the post, please try again",
-        });
-      }
-      return res.json({
-        success: true,
-        msg: "Post uploaded successfully",
-        post
+    if (!savedPost) {
+      return res.status(500).json({
+        success: false,
+        error: "Couldn't create the post, please try again",
       });
+    }
+    return res.json({
+      success: true,
+      msg: "Post uploaded successfully",
+      post,
     });
   } catch (err) {
     console.log(err);

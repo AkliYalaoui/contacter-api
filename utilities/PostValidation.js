@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const validatePost = (data) =>
   Joi.object({
-    content: Joi.string().trim().min(4).max(2048).required(),
+    content: Joi.string().trim().max(2048).required(),
   }).validate(data);
 
 const validatePostImage = (file) => {
@@ -29,4 +29,4 @@ const getImageType = (file) => {
   if (file.mimetype.includes("video")) return "video";
   return "image";
 };
-export { validatePost, validatePostImage,getImageType };
+export { validatePost, validatePostImage, getImageType };

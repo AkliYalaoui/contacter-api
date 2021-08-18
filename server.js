@@ -6,6 +6,8 @@ import cors from "cors";
 import fileUploader from "express-fileupload";
 import AuthRoutes from "./routes/AuthRouter.js";
 import UserRoutes from "./routes/UserRouter.js";
+import CommentRoutes from "./routes/CommentRouter.js";
+import LikeRoutes from "./routes/LikeRouter.js";
 import FriendRoutes from "./routes/FriendRouter.js";
 import PostRoutes from "./routes/PostRouter.js";
 import ConversationRoutes from "./routes/ConversationRouter.js";
@@ -35,6 +37,8 @@ mongoose
     app.use("/api/friends", FriendRoutes);
     app.use("/api/conversations", ConversationRoutes);
     app.use("/api/posts", PostRoutes);
+    app.use("/api/comments", CommentRoutes);
+    app.use("/api/likes", LikeRoutes);
 
     const server = http.createServer(app);
     socketIo(server);

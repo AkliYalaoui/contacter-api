@@ -7,6 +7,7 @@ import fileUploader from "express-fileupload";
 import AuthRoutes from "./routes/AuthRouter.js";
 import UserRoutes from "./routes/UserRouter.js";
 import FriendRoutes from "./routes/FriendRouter.js";
+import PostRoutes from "./routes/PostRouter.js";
 import ConversationRoutes from "./routes/ConversationRouter.js";
 import socketIo from "./socket.js";
 
@@ -33,6 +34,7 @@ mongoose
     app.use("/api/users", UserRoutes);
     app.use("/api/friends", FriendRoutes);
     app.use("/api/conversations", ConversationRoutes);
+    app.use("/api/posts", PostRoutes);
 
     const server = http.createServer(app);
     socketIo(server);

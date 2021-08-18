@@ -98,6 +98,9 @@ const register = async (req, res) => {
         user: {
           id: savedUser._id,
           userName: savedUser.userName,
+          lastName: savedUser.lastName,
+          firstName: savedUser.firstName,
+          about: savedUser.about,
           profilePhoto: savedUser.profilePhoto,
           token,
         },
@@ -152,6 +155,9 @@ const login = async (req, res) => {
       user: {
         id: user._id,
         userName: user.userName,
+        lastName: user.lastName,
+        firstName: user.firstName,
+        about: user.about,
         profilePhoto: user.profilePhoto,
         token,
       },

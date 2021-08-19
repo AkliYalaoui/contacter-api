@@ -12,36 +12,60 @@ const conversationSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-    messages: [{
-      _id: {
-        type: String
-      },
-      sender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      },
-      content: {
-        type: String
-      },
-      sentAt: {
-        type: Date
-      }
-    }],
-    lastMessage: {
+    messages: [
+      {
         _id: {
-          type: String
+          type: String,
         },
         sender: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User"
+          ref: "User",
         },
         content: {
-          type: String
+          type: String,
         },
         sentAt: {
-          type: Date
-        }
-    }
+          type: Date,
+        },
+        hasImage: {
+          type: Boolean,
+        },
+        image: {
+          type: {
+            type: String,
+          },
+          url: {
+            type: String,
+          },
+        },
+      },
+    ],
+    lastMessage: {
+      _id: {
+        type: String,
+      },
+      sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      content: {
+        type: String,
+      },
+      sentAt: {
+        type: Date,
+      },
+      hasImage: {
+        type: Boolean,
+      },
+      image: {
+        type: {
+          type: String,
+        },
+        url: {
+          type: String,
+        },
+      },
+    },
   },
   { timestamps: true }
 );

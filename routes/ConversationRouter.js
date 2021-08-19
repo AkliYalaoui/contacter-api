@@ -7,5 +7,6 @@ const router = Router();
 router.get("/",AuthMiddleware,ConversationController.getConversations);
 router.get("/:id",AuthMiddleware,ConversationController.getMessages);
 router.post("/:id", AuthMiddleware, ConversationController.saveMessage);
+router.get("/image/:imageName", ConversationController.getImage);
 
 export default router;

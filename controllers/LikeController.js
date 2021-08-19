@@ -1,5 +1,6 @@
 import Like from "../models/Like.js";
 import Post from "../models/Post.js";
+import Notification from "../models/Notification.js";
 
 const LikeUnLike = async (req, res) => {
   try {
@@ -30,13 +31,22 @@ const LikeUnLike = async (req, res) => {
     });
 
     const savedLike = await like.save();
-    if (!savedLike) {
+
+    const likeNotification = new Notification({
+      type: "like",
+      postId: id,
+      content: post.content,
+      from: userId,
+      to: post.userId,
+    });
+    const savedLikeNotification = await likeNotification.save();
+
+    if (!savedLike || !savedLikeNotification) {
       return res.status(500).json({
         success: false,
         error: "something went wrong",
       });
     }
-
     return res.json({
       success: true,
       unliked: false,
@@ -61,7 +71,7 @@ const getLikeCount = async (req, res) => {
     res.json({
       success: true,
       countLikes: count,
-      alreadyLiked : liked ? true : false
+      alreadyLiked: liked ? true : false,
     });
   } catch (err) {
     console.log(err);

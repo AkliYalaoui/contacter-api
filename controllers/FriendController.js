@@ -1,6 +1,7 @@
 import Friend from "../models/Friend.js";
 import User from "../models/User.js";
 import Conversation from "../models/Conversation.js";
+import Notification from "../models/Notification.js";
 
 const getSuggestions = async (req, res) => {
   try {
@@ -192,11 +193,19 @@ const acceptRequest = async (req, res) => {
 
     const savedNewConversation = await newConversation.save();
 
+    const requestNotification = new Notification({
+      type: "request",
+      content: "Accepted your request",
+      from: request.recipient,
+      to: request.requester,
+    });
+    const savedRequestNotification = await requestNotification.save();
     if (
       savedRequest &&
       savedLoggedUser &&
       savedNewFriend &&
-      savedNewConversation
+      savedNewConversation &&
+      savedRequestNotification
     ) {
       return res.json({
         success: true,

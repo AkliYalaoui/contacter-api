@@ -5,6 +5,7 @@ import PostController from "../controllers/PostController.js";
 const router = Router();
 
 router.get("/", AuthMiddleware, PostController.getHomePosts);
+router.get("/:id", AuthMiddleware, PostController.getPostById);
 router.get("/image/:imageName", PostController.getImage);
 router.post("/create", AuthMiddleware,PostController.createPost);
 

@@ -8,6 +8,7 @@ import AuthRoutes from "./routes/AuthRouter.js";
 import UserRoutes from "./routes/UserRouter.js";
 import CommentRoutes from "./routes/CommentRouter.js";
 import LikeRoutes from "./routes/LikeRouter.js";
+import NotificationRoutes from "./routes/NotificationRouter.js";
 import FriendRoutes from "./routes/FriendRouter.js";
 import PostRoutes from "./routes/PostRouter.js";
 import ConversationRoutes from "./routes/ConversationRouter.js";
@@ -39,6 +40,7 @@ mongoose
     app.use("/api/posts", PostRoutes);
     app.use("/api/comments", CommentRoutes);
     app.use("/api/likes", LikeRoutes);
+    app.use("/api/notifications", NotificationRoutes);
 
     const server = http.createServer(app);
     socketIo(server);

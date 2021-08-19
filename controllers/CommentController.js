@@ -9,6 +9,7 @@ import {
   validatePost,
 } from "../utilities/PostValidation.js";
 import { v4 as uuidv4 } from "uuid";
+import Notification from "../models/Notification.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,7 +88,7 @@ const addComment = async (req, res) => {
           });
         }
       });
-      
+
       hasImage = true;
       image.url = fileName;
       image.type = getImageType(file);
@@ -101,8 +102,16 @@ const addComment = async (req, res) => {
     });
 
     const savedComment = await comment.save();
+    const commentNotification = new Notification({
+      type: "comment",
+      postId: id,
+      content: value.content,
+      from: userId,
+      to: post.userId,
+    });
+    const savedCommentNotification = await commentNotification.save();
 
-    if (!savedComment) {
+    if (!savedComment || !savedCommentNotification) {
       res.status(500).json({
         success: false,
         error: "something went wrong, couldn't get the comments",

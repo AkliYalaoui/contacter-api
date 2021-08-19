@@ -129,5 +129,31 @@ const getHomePosts = async (req, res) => {
     });
   }
 };
+const getPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export default { createPost, getImage, getHomePosts };
+    const post = await Post.findById(id)
+      .populate("userId", { password: 0 })
+      .exec();
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        error: "post not found",
+      });
+    }
+    return res.json({
+      success: true,
+      post,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      error: "something went wrong, please try again",
+    });
+  }
+};
+
+export default { createPost, getImage, getHomePosts, getPostById };

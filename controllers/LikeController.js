@@ -1,6 +1,7 @@
 import Like from "../models/Like.js";
 import Post from "../models/Post.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
 
 const LikeUnLike = async (req, res) => {
   try {
@@ -8,6 +9,7 @@ const LikeUnLike = async (req, res) => {
     const { userId } = req;
 
     const post = await Post.findById(id);
+    const user = await User.findById(userId).select("userName profilePhoto");
 
     if (!post) {
       return res.status(404).json({
@@ -51,6 +53,8 @@ const LikeUnLike = async (req, res) => {
       success: true,
       unliked: false,
       liked: true,
+      notification: savedLikeNotification,
+      from: user,
     });
   } catch (err) {
     console.log(err);

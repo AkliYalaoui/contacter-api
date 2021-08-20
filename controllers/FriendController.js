@@ -210,6 +210,11 @@ const acceptRequest = async (req, res) => {
       return res.json({
         success: true,
         msg: "request accepted successfully",
+        notification: savedRequestNotification,
+        from: {
+          profilePhoto: loggedUser.profilePhoto,
+          userName: loggedUser.userName,
+        },
       });
     }
 

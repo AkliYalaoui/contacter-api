@@ -25,8 +25,15 @@ const socketIo = (server) => {
       socket.join(id);
     });
     socket.on("send-request", (id, request) => {
-      console.log(id, request);
       socket.broadcast.to(id).emit("receive-request", id, request);
+    });
+
+    //Notifications
+    socket.on("join-notifications", (id) => {
+      socket.join(id);
+    });
+    socket.on("send-notification", (id, notification) => {
+      socket.broadcast.to(id).emit("receive-notification", id, notification);
     });
   });
 };

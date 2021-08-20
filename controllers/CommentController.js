@@ -1,5 +1,6 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -51,6 +52,7 @@ const addComment = async (req, res) => {
     const { userId } = req;
 
     const post = await Post.findById(id);
+    const user = await User.findById(userId).select("userName profilePhoto");
 
     if (!post) {
       res.status(404).json({
@@ -121,6 +123,8 @@ const addComment = async (req, res) => {
     res.json({
       success: true,
       comment: savedComment,
+      notification: commentNotification,
+      from: user,
     });
   } catch (err) {
     console.log(err);

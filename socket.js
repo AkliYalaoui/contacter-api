@@ -35,6 +35,17 @@ const socketIo = (server) => {
     socket.on("send-notification", (id, notification) => {
       socket.broadcast.to(id).emit("receive-notification", id, notification);
     });
+
+    //comments and likes for a post
+    socket.on("join-post", (id) => {
+      socket.join(id);
+    });
+    socket.on("send-comment", (id, comment) => {
+      socket.broadcast.to(id).emit("receive-comment", id, comment);
+    });
+    socket.on("send-like", (id, like) => {
+      socket.broadcast.to(id).emit("receive-like", id, like);
+    });
   });
 };
 

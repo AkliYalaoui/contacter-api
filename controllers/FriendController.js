@@ -227,11 +227,33 @@ const acceptRequest = async (req, res) => {
     });
   }
 };
+const count = async (req, res) => {
+  try {
+    const { userId } = req;
+    //get requests
+    const friendRequestsCount = await Friend.where(
+      { $and: [{ recipient: userId }, { status: 0 }] },
+      { recipient: 0, status: 0 }
+    ).countDocuments();
 
+    return res.json({
+      success: true,
+      friendRequestsCount,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      error:
+        "something went wrong while trying to get the requests,please try again",
+    });
+  }
+};
 export default {
   getRequest,
   createRequest,
   deleteRequest,
   acceptRequest,
   getSuggestions,
+  count,
 };

@@ -82,20 +82,34 @@ const getMessages = async (req, res) => {
 
 const saveMessage = async (req, res) => {
   try {
-    //validate the data body
-    const { error, value } = validatePost(req.body);
-    //check for errors
-    if (error) {
+    let content = req.body.content;
+
+    if (content && typeof content != "string") {
       return res.status(400).json({
         success: false,
-        error: error.details[0].message,
+        error: "Message content must be a text",
+      });
+    }
+    if (content) {
+      content = content.trim();
+    }
+
+    if (!(req.files && req.files.messagePhoto) && !content) {
+      return res.status(400).json({
+        success: false,
+        error: "Can't create an empty message",
       });
     }
 
     const { userId } = req;
     const conversationId = req.params.id;
-    const { content } = value;
 
+    if (!conversationId) {
+      return res.status(404).json({
+        success: false,
+        error: "Couldn't send  the message to this conversation",
+      });
+    }
     const conversation = await Conversation.findOne({
       $and: [
         { _id: conversationId },
@@ -154,7 +168,7 @@ const saveMessage = async (req, res) => {
     };
 
     conversation.messages.push(message);
-    conversation.lastMessage = message;
+    conversation.lastMessage = { ...message, content: "sent an attachement" };
 
     const updatedConversation = await conversation.save();
     if (!updatedConversation) {

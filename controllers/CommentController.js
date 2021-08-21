@@ -45,23 +45,39 @@ const getComments = async (req, res) => {
 const addComment = async (req, res) => {
   try {
     //validate the data body
-    const { error, value } = validatePost(req.body);
-    //check for errors
-    if (error) {
+    let content = req.body.content;
+
+    if (content && typeof content != "string") {
       return res.status(400).json({
         success: false,
-        error: error.details[0].message,
+        error: "Comment content must be a text",
+      });
+    }
+    if (content) {
+      content = content.trim();
+    }
+
+    if (!(req.files && req.files.commentPhoto) && !content) {
+      return res.status(400).json({
+        success: false,
+        error: "Can't create an empty comment",
       });
     }
 
     const { id } = req.params;
     const { userId } = req;
 
+    if (!id) {
+      return res.status(404).json({
+        success: false,
+        error: "Post not found, couldn't upload your comment",
+      });
+    }
     const post = await Post.findById(id);
     const user = await User.findById(userId).select("userName profilePhoto");
 
     if (!post) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: "Post not found, couldn't upload your comment",
       });
@@ -104,7 +120,7 @@ const addComment = async (req, res) => {
     const comment = new Comment({
       userId,
       postId: id,
-      content: value.content,
+      content: content,
       hasImage,
       image,
     });
@@ -113,20 +129,20 @@ const addComment = async (req, res) => {
     const commentNotification = new Notification({
       type: "comment",
       postId: id,
-      content: value.content,
+      content: content ? content : "commented with a photo",
       from: userId,
       to: post.userId,
     });
     const savedCommentNotification = await commentNotification.save();
 
     if (!savedComment || !savedCommentNotification) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         error: "something went wrong, couldn't get the comments",
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       comment: savedComment,
       notification: commentNotification,

@@ -17,12 +17,22 @@ const __dirname = path.dirname(__filename);
 const createPost = async (req, res) => {
   try {
     //validate the data body
-    const { error, value } = validatePost(req.body);
-    //check for errors
-    if (error) {
+    let content = req.body.content;
+
+    if (content && typeof content != "string") {
       return res.status(400).json({
         success: false,
-        error: error.details[0].message,
+        error: "Post content must be a text",
+      });
+    }
+    if (content) {
+      content = content.trim();
+    }
+
+    if (!(req.files && req.files.postPhoto) && !content) {
+      return res.status(400).json({
+        success: false,
+        error: "Can't create an empty post",
       });
     }
     //user Id
@@ -59,7 +69,7 @@ const createPost = async (req, res) => {
     //create the post
     const post = new Post({
       userId,
-      content: value.content,
+      content,
       hasImage,
       image: {
         url: fileName,

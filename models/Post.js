@@ -9,14 +9,13 @@ const postSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
       max: 2048,
     },
     hasImage: {
       type: Boolean,
       required: true,
-      default : true
-    }, 
+      default: true,
+    },
     image: {
       type: {
         type: String,

@@ -14,7 +14,6 @@ const commentSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
       max: 2048,
     },
     hasImage: {

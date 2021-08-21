@@ -44,6 +44,12 @@ const getMessages = async (req, res) => {
   try {
     const conversationId = req.params.id;
     const { userId } = req;
+    if (!conversationId) {
+      return res.status(404).json({
+        success: false,
+        error: "Couldn't retrieve the messages for this conversation",
+      });
+    }
     const conversation = await Conversation.findOne({
       $and: [
         { _id: conversationId },

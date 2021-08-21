@@ -133,6 +133,12 @@ const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!id) {
+      return res.status(404).json({
+        success: false,
+        error: "post not found",
+      });
+    }
     const post = await Post.findById(id)
       .populate("userId", { password: 0 })
       .exec();

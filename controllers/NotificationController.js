@@ -30,6 +30,14 @@ const markRead = async (req, res) => {
   try {
     const { userId } = req;
     const { notificationId } = req.params;
+
+    if (!notificationId) {
+      return res.status(404).json({
+        success: false,
+        read: false,
+        error: "couldn't mark this notification as read",
+      });
+    }
     const notification = await Notification.find({
       _id: notificationId,
       to: userId,

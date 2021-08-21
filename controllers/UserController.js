@@ -191,8 +191,16 @@ const updateProfile = async (req, res) => {
 const fetchUserProfileByUsername = async (req, res) => {
   try {
     const { userName } = req.params;
+    let results = [];
+
+    if (typeof userName !== "string" && userName.trim().lenght === 0) {
+      res.json({
+        success: true,
+        results,
+      });
+    }
     const userRegex = new RegExp(`^${userName}`, "i");
-    const results = await User.find({ userName: userRegex }).select("userName");
+    results = await User.find({ userName: userRegex }).select("userName");
 
     res.json({
       success: true,

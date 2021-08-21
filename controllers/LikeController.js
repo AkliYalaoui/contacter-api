@@ -8,6 +8,12 @@ const LikeUnLike = async (req, res) => {
     const { id } = req.params;
     const { userId } = req;
 
+    if (!id) {
+      return res.status(404).json({
+        success: false,
+        error: "Couldn't like this post",
+      });
+    }
     const post = await Post.findById(id);
     const user = await User.findById(userId).select("userName profilePhoto");
 

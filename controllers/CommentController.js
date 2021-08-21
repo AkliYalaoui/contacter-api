@@ -19,12 +19,18 @@ const getComments = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!id) {
+      return res.status(500).json({
+        success: false,
+        error: "something went wrong, could'n get the comments",
+      });
+    }
     const comments = await Comment.find({ postId: id })
       .populate("userId", "profilePhoto")
       .sort({ createdAt: "desc" })
       .exec();
 
-    res.json({
+    return res.json({
       success: true,
       comments,
     });

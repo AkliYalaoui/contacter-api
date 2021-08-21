@@ -82,6 +82,13 @@ const createRequest = async (req, res) => {
     const { userId } = req;
     const recipientId = req.body.id;
 
+    if (!recipientId) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "something went wrong while trying to send the request,please try again",
+      });
+    }
     //check if it is arleady a request
     let request = await Friend.findOne({
       $or: [
@@ -134,6 +141,14 @@ const deleteRequest = async (req, res) => {
   try {
     const requestId = req.body.id;
     const { userId } = req;
+
+    if (!requestId) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "something went wrong while trying to delete the request,please try again",
+      });
+    }
     //fetch and delete  the request
     const request = await Friend.deleteOne({
       _id: requestId,
@@ -164,6 +179,14 @@ const acceptRequest = async (req, res) => {
   try {
     const requestId = req.body.id;
     const { userId } = req;
+
+    if (!requestId) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "something went wrong while trying to accept the request,please try again",
+      });
+    }
     //update the status of the request
     const request = await Friend.findById(requestId);
     request.status = 1;

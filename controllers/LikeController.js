@@ -43,7 +43,7 @@ const LikeUnLike = async (req, res) => {
     const likeNotification = new Notification({
       type: "like",
       postId: id,
-      content: post.content,
+      content: post.content ? post.content : "liked Your photo",
       from: userId,
       to: post.userId,
     });

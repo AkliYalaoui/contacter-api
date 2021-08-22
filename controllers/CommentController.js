@@ -157,7 +157,7 @@ const addComment = async (req, res) => {
   }
 };
 const getImage = (req, res) => {
-  const filePath = `/uploads/comments/${req.params.imageName}`;
+  const filePath = `/uploads/comments/${decodeURI(req.params.imageName ?? "")}`;
 
   fs.access(`./${filePath}`, (err) => {
     if (err) {

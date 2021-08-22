@@ -50,13 +50,16 @@ const socketIo = (server) => {
 
     //video calls
     socket.on("call-user", ({ userTocall, signalData, from, name }) => {
-      socket
+      socket.broadcast
         .to(userTocall)
         .emit("user-calling", { signal: signalData, from, name });
     });
 
     socket.on("answer-call", (data) => {
-      socket.to(data.to).emit("call-accepted", data.signal);
+      socket.broadcast.to(data.to).emit("call-accepted", data.signal);
+    });
+    socket.on("call-ended", (from) => {
+      socket.broadcast.to(from).emit("call-canceled", from);
     });
   });
 };

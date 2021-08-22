@@ -16,7 +16,6 @@ import socketIo from "./socket.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
-const HOST = process.env.HOST;
 const DBURI = process.env.DBURI;
 
 mongoose
@@ -42,10 +41,13 @@ mongoose
     app.use("/api/likes", LikeRoutes);
     app.use("/api/notifications", NotificationRoutes);
 
+    app.get("/", (req, res) => {
+      res.send("server running");
+    });
     const server = http.createServer(app);
     socketIo(server);
-    server.listen(PORT, HOST, (_) =>
-      console.log(`Server up and running on ${HOST}:${PORT}`)
+    server.listen(PORT, (_) =>
+      console.log(`Server up and running on port${PORT}`)
     );
   })
   .catch((err) => {

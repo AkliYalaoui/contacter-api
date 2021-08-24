@@ -24,9 +24,6 @@ const socketIo = (server) => {
     socket.on("join-room", (id) => {
       socket.join(id);
     });
-    socket.on("join-post", (id) => {
-      socket.join(id);
-    });
 
     //requests and friends
     socket.on("send-request", (id, request) => {
@@ -39,13 +36,11 @@ const socketIo = (server) => {
     });
 
     //comments and likes for a post
-    socket.on("send-comment", (id, comment) => {
-      console.log(id);
-      socket.broadcast.to(id).emit("receive-comment", id, comment);
+    socket.on("send-comment", (id, postId, comment) => {
+      socket.broadcast.to(id).emit("receive-comment", postId, comment);
     });
-    socket.on("send-like", (id, like) => {
-      console.log(id);
-      socket.broadcast.to(id).emit("receive-like", id, like);
+    socket.on("send-like", (id, postId, like) => {
+      socket.broadcast.to(id).emit("receive-like", postId, like);
     });
 
     //video calls

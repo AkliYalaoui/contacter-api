@@ -5,11 +5,14 @@ import {
 } from "../utilities/PostValidation.js";
 import { v4 as uuidv4 } from "uuid";
 import Post from "../models/Post.js";
+import Like from "../models/Like.js";
+import Comment from "../models/Comment.js";
 import User from "../models/User.js";
 
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { log } from "console";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -171,5 +174,44 @@ const getPostById = async (req, res) => {
     });
   }
 };
+const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req;
+    if (!id) {
+      return res.status(404).json({
+        success: false,
+        error: "post not found",
+      });
+    }
+    const deletePost = await Post.deleteOne({ _id: id, userId });
+    const deleteLikes = await Like.deleteMany({ postId: id });
+    const deleteComments = await Comment.deleteMany({ postId: id });
 
-export default { createPost, getImage, getHomePosts, getPostById };
+    if (
+      [
+        deletePost.ok,
+        deletePost.deleteCount,
+        deleteLikes.ok,
+        deleteComments.ok,
+      ].every((i) => i === 1)
+    ) {
+      return res.status(404).json({
+        success: false,
+        error: "post not found",
+      });
+    }
+    return res.json({
+      success: true,
+      msg: "post deleted succefully",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      error: "something went wrong, please try again",
+    });
+  }
+};
+
+export default { createPost, getImage, getHomePosts, getPostById, deletePost };

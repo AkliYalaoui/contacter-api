@@ -168,7 +168,10 @@ const saveMessage = async (req, res) => {
     };
 
     conversation.messages.push(message);
-    conversation.lastMessage = { ...message, content: "sent an attachement" };
+    conversation.lastMessage = {
+      ...message,
+      content: content ? content : "sent an attachement",
+    };
 
     const updatedConversation = await conversation.save();
     if (!updatedConversation) {

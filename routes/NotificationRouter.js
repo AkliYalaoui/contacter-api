@@ -5,10 +5,6 @@ import NotificationController from "../controllers/NotificationController.js";
 const router = Router();
 
 router.get("/", AuthMiddleware, NotificationController.getNotifications);
-router.get(
-  "/read/:notificationId",
-  AuthMiddleware,
-  NotificationController.markRead
-);
+router.put("/read",AuthMiddleware,NotificationController.markAllRead);
 
 export default router;

@@ -26,43 +26,19 @@ const getNotifications = async (req, res) => {
   }
 };
 
-const markRead = async (req, res) => {
+const markAllRead = async (req, res) => {
   try {
     const { userId } = req;
-    const { notificationId } = req.params;
 
-    if (!notificationId) {
-      return res.status(404).json({
-        success: false,
-        read: false,
-        error: "couldn't mark this notification as read",
-      });
-    }
-    const notification = await Notification.find({
-      _id: notificationId,
-      to: userId,
-    });
-    if (!notification) {
-      return res.status(404).json({
-        success: false,
-        read: false,
-        error: "couldn't mark this notification as read",
-      });
-    }
-    notification.read = true;
-
-    const savedNotification = await notification.saved();
-    if (!savedNotification) {
-      return res.status(500).json({
-        success: false,
-        read: false,
-        error: "something went wrong,please try again",
-      });
-    }
+    const result = await Notification.updateMany(
+      { to: userId },
+      { read: true }
+    );
 
     res.json({
       success: true,
-      read: true,
+      msg: "all notifications are marked read",
+      count: result.nModified,
     });
   } catch (err) {
     console.log(err);
@@ -74,4 +50,4 @@ const markRead = async (req, res) => {
   }
 };
 
-export default { getNotifications, markRead };
+export default { getNotifications, markAllRead };

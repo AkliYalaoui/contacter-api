@@ -10,8 +10,13 @@ const socketIo = (server) => {
   io.on("connection", (socket) => {
     //conversations and messages
     socket.on("join-conversation", (id) => socket.join(id));
-    socket.on("send-message", (conversationId, message, user) =>
-      socket.broadcast.to(conversationId).emit("receive-message", message, user)
+    socket.on("send-message", (conversationId, message) =>
+      socket.broadcast.to(conversationId).emit("receive-message", message)
+    );
+    socket.on("send-message-notification", (conversationId, message, user) =>
+      socket.broadcast
+        .to(conversationId)
+        .emit("receive-message-notification", message, user)
     );
     socket.on("user-typing", (id) =>
       socket.broadcast.to(id).emit("typing", "typing")
@@ -67,6 +72,13 @@ const socketIo = (server) => {
     socket.on("chat-update", (conversationId, data) => {
       socket.broadcast.to(conversationId).emit("chat-updated", data);
     });
+
+    //user online / offline
+    // socket.on("set-online", (id, user) => {
+    //   console.log(user);
+    //   socket.broadcast.to(id).emit("receive-online-user", user);
+    // });
+    // socket.on("disconnect", () => {});
   });
 };
 

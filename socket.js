@@ -10,8 +10,8 @@ const socketIo = (server) => {
   io.on("connection", (socket) => {
     //conversations and messages
     socket.on("join-conversation", (id) => socket.join(id));
-    socket.on("send-message", (conversationId, message) =>
-      socket.broadcast.to(conversationId).emit("receive-message", message)
+    socket.on("send-message", (conversationId, message, user) =>
+      socket.broadcast.to(conversationId).emit("receive-message", message, user)
     );
     socket.on("user-typing", (id) =>
       socket.broadcast.to(id).emit("typing", "typing")
@@ -44,17 +44,28 @@ const socketIo = (server) => {
     });
 
     //video calls
-    socket.on("call-user", ({ userTocall, signalData, from, name }) => {
-      socket.broadcast
-        .to(userTocall)
-        .emit("user-calling", { signal: signalData, from, name });
-    });
+    socket.on(
+      "call-user",
+      ({ userTocall, signalData, from, name, profilePhoto }) => {
+        socket.broadcast.to(userTocall).emit("user-calling", {
+          signal: signalData,
+          from,
+          name,
+          profilePhoto,
+        });
+      }
+    );
 
     socket.on("answer-call", (data) => {
       socket.broadcast.to(data.to).emit("call-accepted", data.signal);
     });
     socket.on("call-ended", (from) => {
       socket.broadcast.to(from).emit("call-canceled", from);
+    });
+
+    //chat nicknames and background image
+    socket.on("chat-update", (conversationId, data) => {
+      socket.broadcast.to(conversationId).emit("chat-updated", data);
     });
   });
 };

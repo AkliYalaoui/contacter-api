@@ -12,6 +12,18 @@ const conversationSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    nickName_a: {
+      type: String,
+      default: "",
+    },
+    nickName_b: {
+      type: String,
+      default: "",
+    },
+    background: {
+      type: String,
+      default: "",
+    },
     messages: [
       {
         _id: {

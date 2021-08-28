@@ -5,6 +5,7 @@ import ConversationController from "../controllers/ConversationController.js";
 const router = Router();
 
 router.get("/", AuthMiddleware, ConversationController.getConversations);
+router.put("/:id", AuthMiddleware, ConversationController.updateConversation);
 router.get("/:id", AuthMiddleware, ConversationController.getMessages);
 router.post("/:id", AuthMiddleware, ConversationController.saveMessage);
 router.get(
@@ -12,5 +13,6 @@ router.get(
   AuthMiddleware,
   ConversationController.getImage
 );
+router.get("/background/:imageName", ConversationController.getBackground);
 
 export default router;

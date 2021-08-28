@@ -135,7 +135,7 @@ const updateProfile = async (req, res) => {
         });
       }
       //move the file to the uploads folder
-      fileName = `${value.userName}${path.extname(file.name)}`;
+      fileName = `${Date.now()}-${value.userName}${path.extname(file.name)}`;
       file.mv(`./uploads/users/${fileName}`, async (err) => {
         if (err) {
           console.log(err);
@@ -150,6 +150,13 @@ const updateProfile = async (req, res) => {
 
     //get the user
     const user = await User.findById(userId);
+
+    fileUpdated &&
+      fs.unlink(`./uploads/users/${user.profilePhoto}`, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
 
     passwordUpdated && (user.password = hashedPassword);
     fileUpdated && (user.profilePhoto = fileName);
